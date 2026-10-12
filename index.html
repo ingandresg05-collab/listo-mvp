@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Listo organiza la precalificacion de clientes y propiedades para crear mejores oportunidades hipotecarias.">
+  <meta name="theme-color" content="#15352f">
+  <title>Listo | Tu camino a una propiedad financiable</title>
+  <style>
+:root {
+  --ink: #17201d;
+  --forest: #15352f;
+  --forest-2: #21483f;
+  --mint: #9ed6be;
+  --mint-soft: #e4f1eb;
+  --coral: #ef715b;
+  --coral-dark: #d95643;
+  --paper: #f6f5f0;
+  --white: #ffffff;
+  --line: #d9ddd9;
+  --muted: #66716c;
+  --warning: #fff2d9;
+  --shadow: 0 20px 48px rgba(18, 43, 36, .12);
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+
+.page-shell { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  height: 72px;
+  padding: 0 max(24px, calc((100vw - 1180px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--white);
+  transition: background .25s ease, color .25s ease, box-shadow .25s ease;
+}
+.site-header.scrolled, .site-header.app-header {
+  background: rgba(246, 245, 240, .96);
+  color: var(--ink);
+  box-shadow: 0 1px 0 rgba(23, 32, 29, .1);
+  backdrop-filter: blur(14px);
+}
+.brand { font-size: 31px; font-weight: 850; letter-spacing: 0; line-height: 1; }
+.brand span { color: var(--coral); }
+.desktop-nav { display: flex; align-items: center; gap: 30px; font-size: 14px; font-weight: 650; }
+.desktop-nav a, .text-button { opacity: .88; }
+.desktop-nav a:hover, .text-button:hover { opacity: 1; }
+.text-button { border: 0; background: none; color: inherit; padding: 0; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-weight: 750;
+  font-size: 14px;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+.button:hover { transform: translateY(-1px); }
+.button svg { width: 18px; height: 18px; }
+.button-primary { background: var(--forest); color: white; }
+.button-primary:hover { background: var(--forest-2); }
+.button-ghost { border-color: var(--line); background: transparent; color: inherit; }
+.site-header:not(.scrolled):not(.app-header) .button-ghost { border-color: rgba(255,255,255,.55); color: white; }
+.button-coral { background: var(--coral); color: white; }
+.button-coral:hover { background: var(--coral-dark); }
+.button-glass { background: rgba(255,255,255,.12); color: white; border-color: rgba(255,255,255,.55); backdrop-filter: blur(8px); }
+.button-white { background: white; color: var(--forest); }
+.button-outline-light { color: white; border-color: rgba(255,255,255,.65); background: transparent; }
+.icon-button { width: 42px; height: 42px; display: inline-grid; place-items: center; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: inherit; }
+.icon-button svg { width: 21px; }
+.mobile-menu, .mobile-nav { display: none; }
+
+.hero { min-height: 82vh; height: 780px; max-height: 900px; position: relative; display: flex; align-items: center; overflow: hidden; color: white; }
+.hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(9, 32, 27, .88) 0%, rgba(9, 32, 27, .64) 42%, rgba(9, 32, 27, .06) 76%); }
+.hero-content { position: relative; z-index: 1; padding-top: 50px; }
+.eyebrow { margin: 0 0 14px; text-transform: uppercase; font-size: 12px; font-weight: 850; letter-spacing: .12em; color: var(--forest-2); }
+.eyebrow.light { color: var(--mint); }
+.hero h1 { max-width: 670px; margin: 0; font-size: clamp(48px, 6vw, 78px); line-height: .98; letter-spacing: 0; font-weight: 800; }
+.hero-copy { max-width: 590px; margin: 26px 0 0; font-size: 19px; color: rgba(255,255,255,.88); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.hero-actions .button { min-height: 52px; padding: 0 22px; }
+.trust-line { margin-top: 24px; display: flex; align-items: center; gap: 9px; font-size: 13px; color: rgba(255,255,255,.76); }
+.trust-line svg { width: 17px; }
+
+.intro-band { padding: 96px 0; background: var(--paper); }
+.intro-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 120px; align-items: end; }
+.intro-grid h2, .section-heading h2, .sticky-copy h2, .final-cta h2 { margin: 0; font-size: clamp(36px, 4.5vw, 58px); line-height: 1.04; letter-spacing: 0; }
+.section-lead { margin: 0 0 4px; font-size: 19px; color: var(--muted); max-width: 600px; }
+.routes-grid { display: grid; grid-template-columns: 1fr 1fr; margin-top: 64px; border: 1px solid var(--line); }
+.route-panel { min-height: 390px; padding: 42px; position: relative; display: flex; flex-direction: column; align-items: flex-start; }
+.route-panel + .route-panel { border-left: 1px solid var(--line); }
+.route-icon { width: 54px; height: 54px; display: grid; place-items: center; border-radius: 50%; background: var(--mint-soft); color: var(--forest); }
+.property-route .route-icon { background: #fde4df; color: var(--coral-dark); }
+.route-icon svg { width: 25px; }
+.route-number { margin: 42px 0 8px; font-size: 12px; text-transform: uppercase; font-weight: 850; color: var(--muted); }
+.route-panel h3 { font-size: 28px; margin: 0 0 12px; }
+.route-panel > p:not(.route-number) { max-width: 450px; color: var(--muted); margin: 0; }
+.inline-link { margin-top: auto; padding: 0; border: 0; background: none; color: var(--forest); display: flex; align-items: center; gap: 7px; font-weight: 800; }
+.inline-link svg { width: 17px; }
+
+.match-section { padding: 100px 0; background: white; }
+.section-heading.centered { text-align: center; max-width: 750px; margin: 0 auto; }
+.section-heading > p:last-child { color: var(--muted); font-size: 18px; }
+.match-board { margin-top: 64px; display: grid; grid-template-columns: 1fr 90px 1.15fr 90px 1fr; align-items: center; }
+.match-source { min-height: 118px; border: 1px solid var(--line); padding: 22px; display: flex; align-items: center; gap: 16px; }
+.source-badge { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; flex: 0 0 auto; }
+.source-badge.mint { background: var(--mint-soft); color: var(--forest); }
+.source-badge.coral { background: #fde4df; color: var(--coral-dark); }
+.source-badge svg { width: 21px; }
+.match-source strong, .match-source small { display: block; }
+.match-source small { color: var(--muted); margin-top: 5px; }
+.match-core { min-height: 176px; padding: 24px; color: white; background: var(--forest); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; text-align: center; box-shadow: var(--shadow); }
+.match-core > svg { color: var(--mint); width: 27px; margin-bottom: 12px; }
+.match-core small { color: rgba(255,255,255,.7); margin-top: 5px; }
+.pulse-dot { position: absolute; top: 16px; right: 16px; width: 8px; height: 8px; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 6px rgba(239,113,91,.18); }
+.connector { display: flex; align-items: center; color: var(--forest); }
+.connector span { height: 1px; background: var(--line); flex: 1; }
+.connector svg { width: 18px; flex: 0 0 auto; }
+.result-strip { display: grid; grid-template-columns: repeat(4,1fr); margin-top: 52px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.result-strip div { padding: 20px; display: flex; align-items: center; justify-content: center; gap: 9px; font-size: 13px; font-weight: 750; }
+.result-strip div + div { border-left: 1px solid var(--line); }
+.result-strip svg { width: 18px; color: var(--coral); }
+
+.steps-section { padding: 110px 0; background: #e6eee9; }
+.steps-layout { display: grid; grid-template-columns: .85fr 1.15fr; gap: 110px; align-items: start; }
+.sticky-copy { position: sticky; top: 120px; }
+.sticky-copy > p:last-child { color: var(--muted); font-size: 18px; max-width: 440px; }
+.steps-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid #bacbc3; }
+.steps-list li { display: grid; grid-template-columns: 68px 1fr; gap: 24px; padding: 30px 0; border-bottom: 1px solid #bacbc3; }
+.steps-list li > span { color: var(--coral-dark); font-weight: 850; }
+.steps-list h3 { margin: 0 0 7px; font-size: 21px; }
+.steps-list p { margin: 0; color: var(--muted); }
+.final-cta { padding: 72px 0; color: white; background: var(--forest); }
+.cta-layout { display: flex; align-items: center; justify-content: space-between; gap: 50px; }
+.cta-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+footer { padding: 28px 0; background: #0e2823; color: rgba(255,255,255,.68); font-size: 13px; }
+.footer-layout { display: flex; align-items: center; gap: 30px; }
+.footer-layout > span { margin-left: auto; }
+.footer-brand { color: white; font-size: 24px; }
+
+.app-view { min-height: 100vh; padding-top: 72px; background: white; }
+.app-shell { min-height: calc(100vh - 72px); display: grid; grid-template-columns: minmax(290px, 36%) 1fr; }
+.wizard-sidebar { background: var(--paper); border-right: 1px solid var(--line); padding: 42px max(34px, calc((100vw - 1180px)/2)) 42px max(24px, calc((100vw - 1180px)/2)); }
+.back-home { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; color: var(--muted); font-weight: 750; font-size: 14px; }
+.back-home svg { width: 18px; }
+.sidebar-title { margin-top: 64px; max-width: 340px; }
+.sidebar-title h2 { margin: 0 0 12px; font-size: 36px; line-height: 1.05; }
+.sidebar-title p:last-child { color: var(--muted); }
+.progress-track { width: 100%; height: 4px; background: #dce2df; overflow: hidden; }
+.progress-track span { display: block; height: 100%; background: var(--coral); width: 20%; transition: width .25s ease; }
+.wizard-sidebar > .progress-track { margin: 34px 0 24px; max-width: 340px; }
+.step-nav { margin: 0; padding: 0; list-style: none; max-width: 340px; }
+.step-nav li { display: flex; align-items: center; gap: 12px; padding: 11px 0; color: #88918d; font-size: 14px; font-weight: 700; }
+.step-nav li span { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #cdd3d0; border-radius: 50%; font-size: 11px; }
+.step-nav li.active { color: var(--ink); }
+.step-nav li.active span { background: var(--forest); border-color: var(--forest); color: white; }
+.step-nav li.complete span { background: var(--mint); border-color: var(--mint); color: var(--forest); }
+.draft-note { max-width: 340px; margin-top: 50px; display: flex; gap: 10px; color: var(--muted); font-size: 12px; }
+.draft-note svg { width: 17px; flex: 0 0 auto; }
+.wizard-main { padding: 42px clamp(32px, 6vw, 90px) 60px; }
+.wizard-main form { max-width: 730px; }
+.demo-notice { max-width: 730px; padding: 12px 14px; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; color: #775415; background: var(--warning); font-size: 13px; border: 1px solid #eed7a8; }
+.demo-notice svg { width: 18px; flex: 0 0 auto; }
+.mobile-progress { display: none; }
+.form-heading { margin-bottom: 34px; }
+.form-heading h1 { margin: 0 0 10px; font-size: 36px; line-height: 1.1; }
+.form-heading p { margin: 0; color: var(--muted); }
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.field-grid .full { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label, .field > span { font-size: 13px; font-weight: 750; }
+.field small { color: var(--muted); }
+.field input, .field select, .field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 13px;
+  color: var(--ink);
+  background: white;
+  border: 1px solid #cfd5d2;
+  border-radius: 5px;
+  outline: none;
+}
+.field textarea { min-height: 105px; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(21,53,47,.1); }
+.field.invalid input, .field.invalid select { border-color: #c53d30; }
+.error-text { color: #b5362a; font-size: 12px; display: none; }
+.field.invalid .error-text { display: block; }
+.choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.choice-card { position: relative; }
+.choice-card input { position: absolute; opacity: 0; pointer-events: none; }
+.choice-card label { min-height: 74px; padding: 15px; border: 1px solid var(--line); border-radius: 6px; display: flex; align-items: center; gap: 12px; font-weight: 750; transition: border .15s, background .15s; }
+.choice-card label svg { width: 20px; color: var(--muted); }
+.choice-card input:checked + label { border-color: var(--forest); background: var(--mint-soft); }
+.choice-card input:checked + label svg { color: var(--forest); }
+.bank-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.bank-option { position: relative; }
+.bank-option input { position: absolute; opacity: 0; }
+.bank-option label { min-height: 68px; padding: 14px; border: 1px solid var(--line); border-radius: 6px; display: flex; align-items: center; gap: 12px; font-weight: 750; }
+.bank-mark { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: #edf0ee; color: var(--forest); font-size: 12px; }
+.bank-option input:checked + label { border-color: var(--forest); background: var(--mint-soft); }
+.upload-zone { min-height: 150px; border: 1px dashed #aab4af; background: #fafaf8; display: grid; place-items: center; text-align: center; padding: 24px; position: relative; }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upload-zone svg { color: var(--forest); }
+.upload-zone strong, .upload-zone small { display: block; }
+.upload-zone small { margin-top: 6px; color: var(--muted); }
+.upload-list { margin-top: 12px; display: grid; gap: 8px; }
+.upload-item { padding: 10px 12px; background: var(--mint-soft); display: flex; align-items: center; gap: 9px; font-size: 13px; }
+.upload-item svg { width: 16px; }
+.consent-box { margin-top: 24px; padding: 18px; border: 1px solid var(--line); display: flex; align-items: flex-start; gap: 12px; }
+.consent-box input { margin-top: 4px; accent-color: var(--forest); }
+.consent-box label { font-size: 13px; color: var(--muted); }
+.form-actions { max-width: 730px; margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.form-actions #nextButton, .form-actions #submitButton { margin-left: auto; }
+
+.success-state { max-width: 650px; padding-top: 50px; }
+.success-icon { width: 62px; height: 62px; display: grid; place-items: center; border-radius: 50%; background: var(--mint); color: var(--forest); }
+.success-icon svg { width: 30px; }
+.success-state h1 { font-size: 44px; margin: 24px 0 10px; }
+.success-state > p { color: var(--muted); font-size: 17px; }
+.reference-box { margin: 30px 0; padding: 18px; border: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; }
+.reference-box span { color: var(--muted); font-size: 13px; }
+
+.processes-view { min-height: calc(100vh - 72px); padding: 118px 0 80px; background: var(--paper); }
+.dark-link { color: var(--muted); }
+.processes-header { margin-top: 46px; display: flex; justify-content: space-between; align-items: end; gap: 30px; }
+.processes-header h1 { margin: 0; font-size: 50px; line-height: 1; }
+.processes-header p:last-child { color: var(--muted); }
+.process-actions { display: flex; gap: 10px; }
+.summary-row { display: grid; grid-template-columns: repeat(3,1fr); margin-top: 46px; border: 1px solid var(--line); background: white; }
+.summary-item { padding: 22px; }
+.summary-item + .summary-item { border-left: 1px solid var(--line); }
+.summary-item strong { display: block; font-size: 28px; }
+.summary-item span { color: var(--muted); font-size: 13px; }
+.process-list { margin-top: 28px; display: grid; gap: 12px; }
+.process-card { padding: 20px; border: 1px solid var(--line); background: white; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; }
+.process-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--mint-soft); color: var(--forest); }
+.process-card.property .process-icon { background: #fde4df; color: var(--coral-dark); }
+.process-card h3 { margin: 0 0 3px; font-size: 17px; }
+.process-card p { margin: 0; color: var(--muted); font-size: 13px; }
+.status-pill { padding: 7px 10px; background: var(--warning); color: #775415; font-size: 12px; font-weight: 800; border-radius: 99px; }
+.empty-state { padding: 70px 24px; border: 1px dashed #b8c0bc; text-align: center; background: rgba(255,255,255,.55); }
+.empty-state svg { width: 34px; color: var(--muted); }
+.empty-state h3 { margin: 14px 0 6px; }
+.empty-state p { margin: 0 0 22px; color: var(--muted); }
+
+.toast { position: fixed; z-index: 100; right: 24px; bottom: 24px; padding: 13px 17px; color: white; background: var(--forest); border-radius: 6px; box-shadow: var(--shadow); transform: translateY(120px); opacity: 0; transition: .25s ease; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+@media (max-width: 920px) {
+  .desktop-nav, .desktop-action { display: none; }
+  .mobile-menu { display: inline-grid; border-color: rgba(255,255,255,.5); }
+  .site-header.scrolled .mobile-menu, .site-header.app-header .mobile-menu { border-color: var(--line); }
+  .mobile-nav { position: fixed; z-index: 49; inset: 72px 0 auto; padding: 18px 24px 24px; background: var(--paper); color: var(--ink); box-shadow: 0 16px 30px rgba(0,0,0,.12); }
+  .mobile-nav:not([hidden]) { display: grid; gap: 4px; }
+  .mobile-nav a, .mobile-nav button { padding: 13px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; font-weight: 750; }
+  .hero { height: 720px; }
+  .hero-image { object-position: 63% center; }
+  .hero-shade { background: rgba(9,32,27,.62); }
+  .hero h1 { max-width: 620px; }
+  .intro-grid { grid-template-columns: 1fr; gap: 24px; }
+  .match-board { grid-template-columns: 1fr; gap: 12px; max-width: 620px; margin-left: auto; margin-right: auto; }
+  .connector { height: 34px; flex-direction: column; }
+  .connector span { width: 1px; }
+  .connector svg { transform: rotate(90deg); }
+  .connector.reverse svg { order: 2; transform: rotate(-90deg); }
+  .steps-layout { grid-template-columns: 1fr; gap: 50px; }
+  .sticky-copy { position: static; }
+  .app-shell { grid-template-columns: 290px 1fr; }
+  .wizard-sidebar { padding-left: 24px; padding-right: 24px; }
+}
+
+@media (max-width: 700px) {
+  .page-shell { width: min(100% - 32px, 1180px); }
+  .site-header { height: 64px; padding: 0 16px; }
+  .mobile-nav { top: 64px; }
+  .hero { height: 690px; min-height: 100svh; align-items: end; padding-bottom: 54px; }
+  .hero-image { object-position: 66% center; }
+  .hero-shade { background: linear-gradient(0deg, rgba(9,32,27,.95) 0%, rgba(9,32,27,.53) 64%, rgba(9,32,27,.18) 100%); }
+  .hero-content { padding-top: 90px; }
+  .hero h1 { font-size: 46px; }
+  .hero-copy { font-size: 16px; }
+  .hero-actions { display: grid; }
+  .hero-actions .button { width: 100%; }
+  .intro-band, .match-section, .steps-section { padding: 72px 0; }
+  .intro-grid h2, .section-heading h2, .sticky-copy h2, .final-cta h2 { font-size: 38px; }
+  .routes-grid { grid-template-columns: 1fr; margin-top: 42px; }
+  .route-panel { min-height: 340px; padding: 28px; }
+  .route-panel + .route-panel { border-left: 0; border-top: 1px solid var(--line); }
+  .match-board { margin-top: 42px; }
+  .result-strip { grid-template-columns: 1fr 1fr; }
+  .result-strip div:nth-child(3) { border-left: 0; border-top: 1px solid var(--line); }
+  .result-strip div:nth-child(4) { border-top: 1px solid var(--line); }
+  .result-strip div { justify-content: flex-start; padding: 15px 12px; }
+  .steps-list li { grid-template-columns: 42px 1fr; gap: 12px; }
+  .cta-layout { display: block; }
+  .cta-actions { margin-top: 28px; display: grid; }
+  .footer-layout { flex-wrap: wrap; gap: 12px 20px; }
+  .footer-layout p { order: 3; width: 100%; margin: 0; }
+  .app-view { padding-top: 64px; }
+  .app-shell { display: block; }
+  .wizard-sidebar { display: none; }
+  .wizard-main { padding: 20px 16px 50px; }
+  .mobile-progress { display: grid; grid-template-columns: 42px 1fr; gap: 14px; align-items: center; margin-bottom: 20px; }
+  .mobile-progress > div { display: grid; gap: 8px; }
+  .mobile-progress span { font-size: 12px; color: var(--muted); font-weight: 750; }
+  .demo-notice { align-items: flex-start; }
+  .form-heading h1 { font-size: 30px; }
+  .field-grid, .choice-grid, .bank-grid { grid-template-columns: 1fr; }
+  .form-actions .button { padding: 0 13px; }
+  .processes-view { padding-top: 94px; }
+  .processes-header { display: block; margin-top: 34px; }
+  .processes-header h1 { font-size: 40px; }
+  .process-actions { margin-top: 24px; }
+  .summary-row { grid-template-columns: 1fr; }
+  .summary-item + .summary-item { border-left: 0; border-top: 1px solid var(--line); }
+  .process-card { grid-template-columns: auto 1fr; }
+  .status-pill { grid-column: 1 / -1; justify-self: start; }
+}
+
+</style>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script defer>
+const APP_KEY = "listo_mvp_state_v1";
+
+const state = {
+  type: "client",
+  step: 0,
+  draft: { client: {}, property: {} },
+  files: { client: [], property: [] },
+  processes: []
+};
+
+const bankOptions = [
+  ["popular", "Banco Popular", "BP"],
+  ["banreservas", "Banreservas", "BR"],
+  ["bhd", "Banco BHD", "BHD"],
+  ["scotiabank", "Scotiabank", "SB"]
+];
+
+const configs = {
+  client: {
+    eyebrow: "Expediente de cliente",
+    title: "Precalifica tu perfil",
+    description: "Organiza tu informacion y elige donde deseas solicitar tu precalificacion.",
+    steps: ["Datos personales", "Perfil financiero", "Tu busqueda", "Documentos", "Bancos y autorizacion"]
+  },
+  property: {
+    eyebrow: "Expediente inmobiliario",
+    title: "Registra una propiedad",
+    description: "Prepara el inmueble para evaluar su elegibilidad ante los bancos seleccionados.",
+    steps: ["Responsable", "La propiedad", "Situacion legal", "Documentos", "Bancos y autorizacion"]
+  }
+};
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(APP_KEY));
+    if (!saved) return;
+    state.draft = saved.draft || state.draft;
+    state.files = saved.files || state.files;
+    state.processes = saved.processes || [];
+  } catch (_) {
+    localStorage.removeItem(APP_KEY);
+  }
+}
+
+function saveState(showToast = false) {
+  localStorage.setItem(APP_KEY, JSON.stringify({ draft: state.draft, files: state.files, processes: state.processes }));
+  if (showToast) toast("Borrador guardado");
+}
+
+function toast(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  window.clearTimeout(toast.timer);
+  toast.timer = window.setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function icon(name) {
+  return `<i data-lucide="${name}"></i>`;
+}
+
+function refreshIcons() {
+  if (window.lucide) window.lucide.createIcons();
+}
+
+function field(name, label, type = "text", options = {}) {
+  const value = state.draft[state.type][name] || "";
+  const attrs = [
+    `name="${name}"`,
+    `id="${name}"`,
+    options.required ? "required" : "",
+    options.placeholder ? `placeholder="${options.placeholder}"` : "",
+    options.min ? `min="${options.min}"` : "",
+    options.inputmode ? `inputmode="${options.inputmode}"` : ""
+  ].filter(Boolean).join(" ");
+  return `<div class="field ${options.full ? "full" : ""}">
+    <label for="${name}">${label}${options.required ? " *" : ""}</label>
+    <input type="${type}" ${attrs} value="${escapeHtml(value)}">
+    ${options.hint ? `<small>${options.hint}</small>` : ""}
+    <span class="error-text">Completa este campo para continuar.</span>
+  </div>`;
+}
+
+function selectField(name, label, choices, options = {}) {
+  const value = state.draft[state.type][name] || "";
+  return `<div class="field ${options.full ? "full" : ""}">
+    <label for="${name}">${label}${options.required ? " *" : ""}</label>
+    <select name="${name}" id="${name}" ${options.required ? "required" : ""}>
+      <option value="">Selecciona una opcion</option>
+      ${choices.map(([v,l]) => `<option value="${v}" ${value === v ? "selected" : ""}>${l}</option>`).join("")}
+    </select>
+    <span class="error-text">Selecciona una opcion para continuar.</span>
+  </div>`;
+}
+
+function choiceCards(name, choices) {
+  const selected = state.draft[state.type][name] || "";
+  return `<div class="choice-grid full">${choices.map(([value,label,iconName]) => `
+    <div class="choice-card">
+      <input type="radio" name="${name}" id="${name}_${value}" value="${value}" ${selected === value ? "checked" : ""} required>
+      <label for="${name}_${value}">${icon(iconName)}<span>${label}</span></label>
+    </div>`).join("")}</div>`;
+}
+
+function banksMarkup() {
+  const selected = state.draft[state.type].banks || [];
+  return `<div class="bank-grid full">${bankOptions.map(([value,label,abbr]) => `
+    <div class="bank-option">
+      <input type="checkbox" name="banks" id="bank_${value}" value="${value}" ${selected.includes(value) ? "checked" : ""}>
+      <label for="bank_${value}"><span class="bank-mark">${abbr}</span><span>${label}</span></label>
+    </div>`).join("")}</div>`;
+}
+
+function uploadMarkup() {
+  const files = state.files[state.type];
+  return `<div class="full">
+    <label class="upload-zone">
+      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png">
+      <span>${icon("upload-cloud")}<strong>Selecciona documentos de demostracion</strong><small>PDF, JPG o PNG. Solo conservaremos el nombre del archivo.</small></span>
+    </label>
+    <div class="upload-list" id="uploadList">${files.map(file => `<div class="upload-item">${icon("file-check")}<span>${escapeHtml(file)}</span></div>`).join("")}</div>
+  </div>`;
+}
+
+function heading(title, copy) {
+  return `<div class="form-heading"><h1>${title}</h1><p>${copy}</p></div>`;
+}
+
+function clientStep(step) {
+  const sections = [
+    () => `${heading("Comencemos contigo", "Estos datos nos permiten identificar y organizar tu solicitud.")}<div class="field-grid">
+      ${field("fullName", "Nombre completo", "text", {required:true, placeholder:"Ej. Maria Rodriguez"})}
+      ${field("email", "Correo electronico", "email", {required:true, placeholder:"nombre@correo.com"})}
+      ${field("phone", "Telefono", "tel", {required:true, placeholder:"809 000 0000"})}
+      ${selectField("civilStatus", "Estado civil", [["single","Soltero/a"],["married","Casado/a"],["union","Union libre"],["other","Otro"]], {required:true})}
+    </div>`,
+    () => `${heading("Tu perfil financiero", "Una fotografia sencilla de tus ingresos y compromisos actuales.")}<div class="field-grid">
+      <div class="field full"><span>¿Como generas tus ingresos? *</span>${choiceCards("incomeType", [["employee","Empleado/a","briefcase-business"],["independent","Independiente","laptop"],["business","Empresario/a","store"],["mixed","Ingresos mixtos","layers-3"]])}<span class="error-text">Selecciona una opcion.</span></div>
+      ${field("monthlyIncome", "Ingreso mensual aproximado", "number", {required:true, placeholder:"RD$", min:"0", inputmode:"numeric"})}
+      ${field("monthlyDebt", "Cuotas y deudas mensuales", "number", {required:true, placeholder:"RD$", min:"0", inputmode:"numeric"})}
+      ${field("downPayment", "Monto disponible para inicial", "number", {required:true, placeholder:"RD$", min:"0", inputmode:"numeric"})}
+      ${field("workTime", "Antiguedad laboral o comercial", "text", {placeholder:"Ej. 3 anos"})}
+    </div>`,
+    () => `${heading("¿Que propiedad buscas?", "Estas preferencias ayudaran a identificar oportunidades compatibles contigo.")}<div class="field-grid">
+      ${selectField("propertyType", "Tipo de propiedad", [["apartment","Apartamento"],["house","Casa"],["land","Solar"],["commercial","Local comercial"]], {required:true})}
+      ${field("targetPrice", "Precio aproximado", "number", {required:true, placeholder:"RD$", min:"0", inputmode:"numeric"})}
+      ${field("preferredZone", "Zona de interes", "text", {required:true, placeholder:"Ej. Santo Domingo Este"})}
+      ${selectField("purchaseTime", "¿Cuando deseas comprar?", [["0-3","En los proximos 3 meses"],["3-6","De 3 a 6 meses"],["6-12","De 6 a 12 meses"],["exploring","Estoy explorando"]], {required:true})}
+    </div>`,
+    () => `${heading("Documentos iniciales", "Agrega referencias para simular la preparacion del expediente. No uses documentos reales.")}<div class="field-grid">${uploadMarkup()}</div>`,
+    () => `${heading("Elige donde solicitar", "Puedes seleccionar varios bancos. Cada entidad evaluara el expediente por separado.")}<div class="field-grid">
+      <div class="field full"><span>Entidades de ejemplo *</span><small>La seleccion no representa una integracion bancaria activa.</small></div>
+      ${banksMarkup()}
+      <div class="consent-box full"><input type="checkbox" id="consent" name="consent" ${state.draft.client.consent ? "checked" : ""} required><label for="consent">Autorizo la preparacion del expediente y el envio de la informacion a las entidades seleccionadas. Entiendo que la precalificacion sera emitida por cada banco y no por Listo.</label></div>
+    </div>`
+  ];
+  return sections[step]();
+}
+
+function propertyStep(step) {
+  const sections = [
+    () => `${heading("¿Quien registra la propiedad?", "Identifica a la persona responsable de este expediente.")}<div class="field-grid">
+      <div class="field full"><span>Relacion con la propiedad *</span>${choiceCards("registrantType", [["owner","Propietario/a","user-round"],["agent","Agente inmobiliario","badge-check"],["developer","Desarrollador/a","building-2"],["representative","Representante","users-round"]])}<span class="error-text">Selecciona una opcion.</span></div>
+      ${field("fullName", "Nombre completo o razon social", "text", {required:true, placeholder:"Nombre del responsable"})}
+      ${field("email", "Correo electronico", "email", {required:true, placeholder:"nombre@correo.com"})}
+      ${field("phone", "Telefono", "tel", {required:true, placeholder:"809 000 0000"})}
+      ${field("ownerName", "Nombre del propietario", "text", {required:true, placeholder:"Titular registrado"})}
+    </div>`,
+    () => `${heading("Conozcamos la propiedad", "Describe el inmueble que deseas preparar para precalificacion.")}<div class="field-grid">
+      ${selectField("propertyType", "Tipo de propiedad", [["apartment","Apartamento"],["house","Casa"],["land","Solar"],["commercial","Local comercial"],["project","Proyecto en construccion"]], {required:true})}
+      ${field("salePrice", "Precio de venta", "number", {required:true, placeholder:"RD$", min:"0", inputmode:"numeric"})}
+      ${field("address", "Direccion", "text", {required:true, placeholder:"Sector, municipio y provincia", full:true})}
+      ${field("constructionMeters", "Metros de construccion", "number", {placeholder:"m2", min:"0"})}
+      ${field("bedrooms", "Habitaciones", "number", {placeholder:"0", min:"0"})}
+      ${selectField("condition", "Estado", [["new","Nueva"],["used-good","Usada, buen estado"],["repair","Requiere reparaciones"],["construction","En construccion"]], {required:true})}
+      ${selectField("occupied", "Ocupacion", [["empty","Desocupada"],["owner","Ocupada por propietario"],["tenant","Alquilada"]], {required:true})}
+    </div>`,
+    () => `${heading("Situacion legal", "Esta informacion ayuda a anticipar observaciones antes de enviar el expediente.")}<div class="field-grid">
+      ${field("titleNumber", "Numero de titulo", "text", {required:true, placeholder:"Referencia de demostracion"})}
+      ${field("cadastral", "Designacion catastral", "text", {placeholder:"Referencia catastral"})}
+      ${selectField("hasLien", "¿Tiene hipoteca o gravamen?", [["no","No"],["yes","Si"],["unknown","No lo se"]], {required:true})}
+      ${selectField("hasSurvey", "¿Cuenta con deslinde?", [["yes","Si"],["no","No"],["process","En proceso"],["unknown","No lo se"]], {required:true})}
+      ${selectField("acceptsFinance", "¿Acepta comprador financiado?", [["yes","Si"],["conditional","Sujeto a condiciones"],["no","No"]], {required:true, full:true})}
+    </div>`,
+    () => `${heading("Documentos de la propiedad", "Agrega referencias para simular la revision documental. No uses archivos reales.")}<div class="field-grid">${uploadMarkup()}</div>`,
+    () => `${heading("Solicita la evaluacion", "Selecciona los bancos ante los cuales deseas presentar la propiedad.")}<div class="field-grid">
+      <div class="field full"><span>Entidades de ejemplo *</span><small>La elegibilidad puede quedar condicionada a la tasacion certificada.</small></div>
+      ${banksMarkup()}
+      <div class="consent-box full"><input type="checkbox" id="consent" name="consent" ${state.draft.property.consent ? "checked" : ""} required><label for="consent">Declaro que tengo autorizacion para registrar esta propiedad y autorizo la preparacion y envio del expediente a las entidades seleccionadas.</label></div>
+    </div>`
+  ];
+  return sections[step]();
+}
+
+function renderWizard() {
+  const config = configs[state.type];
+  document.getElementById("wizardEyebrow").textContent = config.eyebrow;
+  document.getElementById("wizardTitle").textContent = config.title;
+  document.getElementById("wizardDescription").textContent = config.description;
+  document.getElementById("stepNav").innerHTML = config.steps.map((label, index) => `<li class="${index === state.step ? "active" : ""} ${index < state.step ? "complete" : ""}"><span>${index < state.step ? icon("check") : index + 1}</span>${label}</li>`).join("");
+  const progress = ((state.step + 1) / config.steps.length) * 100;
+  document.getElementById("progressBar").style.width = `${progress}%`;
+  document.getElementById("mobileProgressBar").style.width = `${progress}%`;
+  document.getElementById("mobileStepLabel").textContent = `Paso ${state.step + 1} de ${config.steps.length}`;
+  document.getElementById("stepContent").innerHTML = state.type === "client" ? clientStep(state.step) : propertyStep(state.step);
+  document.querySelector(".form-actions").hidden = false;
+  document.getElementById("prevButton").hidden = state.step === 0;
+  document.getElementById("nextButton").hidden = state.step === config.steps.length - 1;
+  document.getElementById("submitButton").hidden = state.step !== config.steps.length - 1;
+  bindFormEvents();
+  refreshIcons();
+}
+
+function bindFormEvents() {
+  const form = document.getElementById("wizardForm");
+  form.querySelectorAll("input:not([type=file]), select, textarea").forEach(input => {
+    input.addEventListener("change", collectCurrentStep);
+    input.addEventListener("input", collectCurrentStep);
+  });
+  const fileInput = document.getElementById("fileInput");
+  if (fileInput) {
+    fileInput.addEventListener("change", event => {
+      state.files[state.type] = [...event.target.files].map(file => file.name);
+      saveState();
+      renderWizard();
+      toast("Documentos agregados a la demostracion");
+    });
+  }
+}
+
+function collectCurrentStep() {
+  const form = document.getElementById("wizardForm");
+  const data = new FormData(form);
+  form.querySelectorAll("input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea").forEach(input => {
+    state.draft[state.type][input.name] = input.value;
+  });
+  form.querySelectorAll("input[type=radio]:checked").forEach(input => state.draft[state.type][input.name] = input.value);
+  state.draft[state.type].banks = data.getAll("banks");
+  const consent = form.querySelector("#consent");
+  if (consent) state.draft[state.type].consent = consent.checked;
+  saveState();
+}
+
+function validateStep() {
+  collectCurrentStep();
+  const form = document.getElementById("wizardForm");
+  let valid = true;
+  form.querySelectorAll(".field").forEach(el => el.classList.remove("invalid"));
+  form.querySelectorAll("[required]").forEach(input => {
+    let inputValid = input.type === "radio" ? Boolean(form.querySelector(`[name="${input.name}"]:checked`)) : input.checkValidity();
+    if (!inputValid) {
+      valid = false;
+      input.closest(".field")?.classList.add("invalid");
+    }
+  });
+  if (state.step === 4 && state.draft[state.type].banks.length === 0) {
+    valid = false;
+    toast("Selecciona al menos un banco");
+  } else if (!valid) {
+    toast("Revisa los campos requeridos");
+  }
+  return valid;
+}
+
+function submitWizard(event) {
+  event.preventDefault();
+  if (!validateStep()) return;
+  const draft = state.draft[state.type];
+  const reference = `LST-${state.type === "client" ? "CL" : "PR"}-${String(Date.now()).slice(-6)}`;
+  state.processes.unshift({
+    id: reference,
+    type: state.type,
+    name: state.type === "client" ? draft.fullName : `${propertyLabel(draft.propertyType)} en ${draft.address || "ubicacion pendiente"}`,
+    banks: [...draft.banks],
+    status: "Expediente recibido",
+    createdAt: new Date().toISOString()
+  });
+  state.draft[state.type] = {};
+  state.files[state.type] = [];
+  saveState();
+  document.getElementById("stepContent").innerHTML = `<div class="success-state">
+    <div class="success-icon">${icon("check")}</div>
+    <h1>Tu expediente esta en camino.</h1>
+    <p>Hemos guardado esta solicitud de demostracion. El proximo paso seria la revision documental por parte del equipo de Listo.</p>
+    <div class="reference-box"><div><span>Numero de referencia</span><strong>${reference}</strong></div><div><span>Bancos seleccionados</span><strong>${draft.banks.length}</strong></div></div>
+    <button class="button button-primary" type="button" data-view="processes">Ver mis procesos ${icon("arrow-right")}</button>
+  </div>`;
+  document.querySelector(".form-actions").hidden = true;
+  bindNavigation(document.getElementById("stepContent"));
+  refreshIcons();
+}
+
+function propertyLabel(value) {
+  return ({apartment:"Apartamento", house:"Casa", land:"Solar", commercial:"Local", project:"Proyecto"})[value] || "Propiedad";
+}
+
+function renderProcesses() {
+  const clients = state.processes.filter(p => p.type === "client").length;
+  const properties = state.processes.filter(p => p.type === "property").length;
+  document.getElementById("summaryRow").innerHTML = `
+    <div class="summary-item"><strong>${state.processes.length}</strong><span>Expedientes totales</span></div>
+    <div class="summary-item"><strong>${clients}</strong><span>Clientes registrados</span></div>
+    <div class="summary-item"><strong>${properties}</strong><span>Propiedades registradas</span></div>`;
+  const list = document.getElementById("processList");
+  if (!state.processes.length) {
+    list.innerHTML = `<div class="empty-state">${icon("folder-open")}<h3>Aun no tienes procesos</h3><p>Crea un expediente de cliente o registra una propiedad para comenzar.</p><button class="button button-primary" type="button" data-view="client">Crear expediente</button></div>`;
+  } else {
+    list.innerHTML = state.processes.map(process => `<article class="process-card ${process.type}">
+      <div class="process-icon">${icon(process.type === "client" ? "user-round" : "house")}</div>
+      <div><h3>${escapeHtml(process.name)}</h3><p>${process.id} · ${process.banks.length} banco${process.banks.length === 1 ? "" : "s"} seleccionado${process.banks.length === 1 ? "" : "s"}</p></div>
+      <span class="status-pill">${process.status}</span>
+    </article>`).join("");
+  }
+  bindNavigation(document.getElementById("processesView"));
+  refreshIcons();
+}
+
+function showView(view) {
+  document.querySelectorAll(".view").forEach(el => {
+    el.hidden = true;
+    el.classList.remove("active-view");
+  });
+  const header = document.getElementById("siteHeader");
+  if (view === "home") {
+    const home = document.getElementById("homeView");
+    home.hidden = false;
+    home.classList.add("active-view");
+    header.classList.remove("app-header");
+    window.scrollTo({top: 0, behavior: "smooth"});
+  } else if (view === "client" || view === "property") {
+    state.type = view;
+    state.step = 0;
+    document.getElementById("wizardView").hidden = false;
+    header.classList.add("app-header");
+    renderWizard();
+    window.scrollTo(0, 0);
+  } else {
+    document.getElementById("processesView").hidden = false;
+    header.classList.add("app-header");
+    renderProcesses();
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("mobileNav").hidden = true;
+  document.getElementById("menuButton").setAttribute("aria-expanded", "false");
+  refreshIcons();
+}
+
+function bindNavigation(scope = document) {
+  scope.querySelectorAll("[data-view]").forEach(button => {
+    if (button.dataset.bound) return;
+    button.dataset.bound = "true";
+    button.addEventListener("click", () => showView(button.dataset.view));
+  });
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[char]);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadState();
+  bindNavigation();
+  refreshIcons();
+
+  document.getElementById("menuButton").addEventListener("click", () => {
+    const nav = document.getElementById("mobileNav");
+    nav.hidden = !nav.hidden;
+    document.getElementById("menuButton").setAttribute("aria-expanded", String(!nav.hidden));
+  });
+
+  document.getElementById("nextButton").addEventListener("click", () => {
+    if (!validateStep()) return;
+    state.step += 1;
+    renderWizard();
+    window.scrollTo({top: 0, behavior: "smooth"});
+  });
+  document.getElementById("prevButton").addEventListener("click", () => {
+    collectCurrentStep();
+    state.step = Math.max(0, state.step - 1);
+    renderWizard();
+    window.scrollTo({top: 0, behavior: "smooth"});
+  });
+  document.getElementById("wizardForm").addEventListener("submit", submitWizard);
+
+  window.addEventListener("scroll", () => {
+    const isHome = !document.getElementById("homeView").hidden;
+    document.getElementById("siteHeader").classList.toggle("scrolled", isHome && window.scrollY > 30);
+  }, {passive:true});
+});
+
+</script>
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <a class="brand" href="#inicio" aria-label="Listo, inicio" data-view="home">listo<span>.</span></a>
+    <nav class="desktop-nav" aria-label="Navegacion principal">
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#doble-precalificacion">Precalificacion</a>
+      <button class="text-button" type="button" data-view="processes">Mis procesos</button>
+    </nav>
+    <div class="header-actions">
+      <button class="button button-ghost desktop-action" type="button" data-view="property">Registrar propiedad</button>
+      <button class="button button-primary desktop-action" type="button" data-view="client">Precalificarme</button>
+      <button class="icon-button mobile-menu" type="button" id="menuButton" aria-label="Abrir menu" aria-expanded="false">
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav" hidden>
+    <a href="#como-funciona">Como funciona</a>
+    <a href="#doble-precalificacion">Precalificacion</a>
+    <button type="button" data-view="processes">Mis procesos</button>
+    <button type="button" data-view="client">Precalificarme</button>
+    <button type="button" data-view="property">Registrar propiedad</button>
+  </div>
+
+  <main>
+    <div id="homeView" class="view active-view">
+      <section class="hero" id="inicio">
+        <img class="hero-image" src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1800&q=85" alt="Pareja revisando una propiedad con un evaluador profesional">
+        <div class="hero-shade"></div>
+        <div class="hero-content page-shell">
+          <p class="eyebrow light">El punto de encuentro hipotecario</p>
+          <h1>Tu proxima propiedad puede estar mas cerca.</h1>
+          <p class="hero-copy">Listo prepara la precalificacion de clientes y propiedades ante los bancos que elijan, para conectarlos cuando realmente sean compatibles.</p>
+          <div class="hero-actions">
+            <button class="button button-coral" type="button" data-view="client">Quiero precalificarme <i data-lucide="arrow-right"></i></button>
+            <button class="button button-glass" type="button" data-view="property">Registrar una propiedad</button>
+          </div>
+          <div class="trust-line"><i data-lucide="shield-check"></i><span>Tu decides a cuales bancos se envia cada expediente.</span></div>
+        </div>
+      </section>
+
+      <section class="intro-band" id="como-funciona">
+        <div class="page-shell intro-grid">
+          <div>
+            <p class="eyebrow">Una ruta mas clara</p>
+            <h2>Dos precalificaciones.<br>Un mejor punto de partida.</h2>
+          </div>
+          <p class="section-lead">Un prestamo hipotecario depende de que el cliente pueda financiarse y de que la propiedad pueda ser financiada. Listo organiza ambos expedientes por separado y los conecta solo cuando comparten una entidad compatible.</p>
+        </div>
+        <div class="page-shell routes-grid">
+          <article class="route-panel client-route">
+            <div class="route-icon"><i data-lucide="user-round-check"></i></div>
+            <p class="route-number">Ruta 01</p>
+            <h3>Cliente precalificado</h3>
+            <p>Completa tu perfil, carga tus documentos y elige los bancos donde deseas solicitar la precalificacion.</p>
+            <button class="inline-link" type="button" data-view="client">Iniciar mi expediente <i data-lucide="arrow-up-right"></i></button>
+          </article>
+          <article class="route-panel property-route">
+            <div class="route-icon"><i data-lucide="building-2"></i></div>
+            <p class="route-number">Ruta 02</p>
+            <h3>Propiedad precalificada</h3>
+            <p>Registra el inmueble, organiza sus documentos y solicita su evaluacion ante los bancos seleccionados.</p>
+            <button class="inline-link" type="button" data-view="property">Registrar propiedad <i data-lucide="arrow-up-right"></i></button>
+          </article>
+        </div>
+      </section>
+
+      <section class="match-section" id="doble-precalificacion">
+        <div class="page-shell">
+          <div class="section-heading centered">
+            <p class="eyebrow">El modelo Listo</p>
+            <h2>El match comienza donde coinciden.</h2>
+            <p>La elegibilidad pertenece a cada cliente y a cada propiedad. Un match que no funciona no elimina ninguna de las dos oportunidades.</p>
+          </div>
+          <div class="match-board" aria-label="Diagrama de doble precalificacion">
+            <div class="match-source">
+              <span class="source-badge mint"><i data-lucide="users"></i></span>
+              <div><strong>Clientes elegibles</strong><small>Monto, plazo e inicial</small></div>
+            </div>
+            <div class="connector"><span></span><i data-lucide="arrow-right"></i></div>
+            <div class="match-core">
+              <span class="pulse-dot"></span>
+              <i data-lucide="sparkles"></i>
+              <strong>Motor de match</strong>
+              <small>Banco + monto + condiciones</small>
+            </div>
+            <div class="connector reverse"><i data-lucide="arrow-left"></i><span></span></div>
+            <div class="match-source">
+              <span class="source-badge coral"><i data-lucide="house"></i></span>
+              <div><strong>Propiedades elegibles</strong><small>Valor, documentos y banco</small></div>
+            </div>
+          </div>
+          <div class="result-strip">
+            <div><i data-lucide="landmark"></i><span>Mismo banco</span></div>
+            <div><i data-lucide="badge-dollar-sign"></i><span>Monto compatible</span></div>
+            <div><i data-lucide="calendar-check"></i><span>Precalificaciones vigentes</span></div>
+            <div><i data-lucide="key-round"></i><span>Operacion posible</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="steps-section">
+        <div class="page-shell steps-layout">
+          <div class="sticky-copy">
+            <p class="eyebrow">De datos a decision</p>
+            <h2>Listo organiza el camino.</h2>
+            <p>Tu expediente avanza por etapas claras. Siempre sabras que falta, que banco lo esta evaluando y cual fue el resultado.</p>
+          </div>
+          <ol class="steps-list">
+            <li><span>01</span><div><h3>Crea tu expediente</h3><p>Completa los datos y documentos correspondientes al cliente o la propiedad.</p></div></li>
+            <li><span>02</span><div><h3>Elige tus bancos</h3><p>Selecciona una o varias entidades y autoriza el envio de la informacion.</p></div></li>
+            <li><span>03</span><div><h3>Recibe la precalificacion</h3><p>Consulta los resultados y condiciones emitidos por cada banco.</p></div></li>
+            <li><span>04</span><div><h3>Encuentra compatibilidad</h3><p>Listo cruza clientes y propiedades elegibles para detectar oportunidades reales.</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div class="page-shell cta-layout">
+          <div><p class="eyebrow light">Empieza hoy</p><h2>¿Que quieres poner Listo?</h2></div>
+          <div class="cta-actions">
+            <button class="button button-white" type="button" data-view="client"><i data-lucide="user-round"></i> Mi perfil financiero</button>
+            <button class="button button-outline-light" type="button" data-view="property"><i data-lucide="house"></i> Una propiedad</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="wizardView" class="view app-view" hidden>
+      <div class="app-shell">
+        <aside class="wizard-sidebar">
+          <button class="back-home" type="button" data-view="home"><i data-lucide="arrow-left"></i> Volver al inicio</button>
+          <div class="sidebar-title">
+            <p class="eyebrow" id="wizardEyebrow">Nuevo expediente</p>
+            <h2 id="wizardTitle">Precalificacion</h2>
+            <p id="wizardDescription"></p>
+          </div>
+          <div class="progress-track"><span id="progressBar"></span></div>
+          <ol class="step-nav" id="stepNav"></ol>
+          <div class="draft-note"><i data-lucide="save"></i><span>Tu borrador se guarda automaticamente en este navegador.</span></div>
+        </aside>
+
+        <section class="wizard-main">
+          <div class="mobile-progress">
+            <button class="icon-button" type="button" data-view="home" aria-label="Volver"><i data-lucide="arrow-left"></i></button>
+            <div><span id="mobileStepLabel">Paso 1 de 5</span><div class="progress-track"><span id="mobileProgressBar"></span></div></div>
+          </div>
+          <div class="demo-notice"><i data-lucide="info"></i><span>Version de demostracion. No introduzcas datos personales ni documentos reales.</span></div>
+          <form id="wizardForm" novalidate>
+            <div id="stepContent"></div>
+            <div class="form-actions">
+              <button class="button button-ghost" type="button" id="prevButton"><i data-lucide="arrow-left"></i> Anterior</button>
+              <button class="button button-primary" type="button" id="nextButton">Continuar <i data-lucide="arrow-right"></i></button>
+              <button class="button button-coral" type="submit" id="submitButton" hidden>Enviar solicitud <i data-lucide="check"></i></button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <div id="processesView" class="view processes-view" hidden>
+      <div class="page-shell processes-shell">
+        <button class="back-home dark-link" type="button" data-view="home"><i data-lucide="arrow-left"></i> Volver al inicio</button>
+        <div class="processes-header">
+          <div><p class="eyebrow">Panel personal</p><h1>Mis procesos</h1><p>Consulta los expedientes creados en esta demostracion.</p></div>
+          <div class="process-actions"><button class="button button-ghost" type="button" data-view="property"><i data-lucide="plus"></i> Propiedad</button><button class="button button-primary" type="button" data-view="client"><i data-lucide="plus"></i> Cliente</button></div>
+        </div>
+        <div class="summary-row" id="summaryRow"></div>
+        <div class="process-list" id="processList"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="page-shell footer-layout"><a class="brand footer-brand" href="#inicio" data-view="home">listo<span>.</span></a><p>Precalificacion inteligente para clientes y propiedades.</p><span>Prototipo MVP</span></div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
